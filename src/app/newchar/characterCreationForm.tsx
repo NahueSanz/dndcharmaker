@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { supabase } from "../lib/supabase";
 import {
   Select,
   SelectContent,
@@ -129,13 +130,28 @@ export default function CharacterCreationForm({
   const [selectedSpells, setSelectedSpells] = useState<string[]>([]);
   const [image, setImage] = useState<string | null>(null);
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => setImage(reader.result as string);
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    const fileName = `${Date.now()}-${file.name}`;
+
+    const { data, error } = await supabase.storage
+      .from("avatars")
+      .upload(fileName, file);
+
+    if (error) {
+      console.error("Error al subir imagen:", error);
+      return;
     }
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("avatars").getPublicUrl(fileName);
+
+    setImage(publicUrl);
   };
 
   const handleCantripSelection = (cantrip: string) => {
@@ -184,7 +200,12 @@ export default function CharacterCreationForm({
     <Card className="max-w-lg mx-auto p-4 bg-[#1f2937]/80 rounded-2xl shadow-xl backdrop-blur border border-gray-700 text-white">
       <CardContent>
         <h2 className="text-xl font-bold mb-4">Crear Personaje</h2>
-        <form onSubmit={handleSubmit(onNext)} className="space-y-8">
+        <form
+          onSubmit={handleSubmit((data) => {
+            onNext({ ...data, image }); // <--- Asegurate de enviar la imagen aquí
+          })}
+          className="space-y-8"
+        >
           <div>
             <label className="block text-sm font-medium text-white">
               Nombre:
@@ -368,7 +389,12 @@ export default function CharacterCreationForm({
             </>
           )}
 
-          <Input type="file" accept="image/png" onChange={handleImageUpload} />
+          <Input
+            type="file"
+            accept="image/png"
+            onChange={handleImageUpload}
+            className="cursor-pointer"
+          />
           {image && (
             <img
               src={image}
@@ -376,13 +402,14 @@ export default function CharacterCreationForm({
               className="w-32 h-32 object-cover"
             />
           )}
-
-          <Button
-            type="submit"
-            className="px-8 py-3 rounded-xl text-lg bg-[#3e3e6f] hover:bg-[#505092] text-white shadow-lg transition duration-300"
-          >
-            Siguiente
-          </Button>
+          <div className="flex justify-end">
+            <Button
+              type="submit"
+              className="px-8 py-3 rounded-xl text-lg bg-[#3e3e6f] hover:bg-[#505092] text-white shadow-lg transition duration-300 cursor-pointer"
+            >
+              Siguiente
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>
