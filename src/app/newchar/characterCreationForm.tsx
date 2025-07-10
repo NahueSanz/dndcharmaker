@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -172,13 +172,23 @@ export default function CharacterCreationForm({
     setValue("spells", updatedSpells);
   };
 
+  useEffect(() => {
+    // Limpiar hechizos y cantrips si cambia la clase
+    setSelectedCantrips([]);
+    setSelectedSpells([]);
+    setValue("cantrips", []);
+    setValue("spells", []);
+  }, [selectedClass]);
+
   return (
-    <Card className="max-w-lg mx-auto p-4">
+    <Card className="max-w-lg mx-auto p-4 bg-[#1f2937]/80 rounded-2xl shadow-xl backdrop-blur border border-gray-700 text-white">
       <CardContent>
         <h2 className="text-xl font-bold mb-4">Crear Personaje</h2>
-        <form onSubmit={handleSubmit(onNext)} className="space-y-4">
+        <form onSubmit={handleSubmit(onNext)} className="space-y-8">
           <div>
-            Nombre:
+            <label className="block text-sm font-medium text-white">
+              Nombre:
+            </label>
             <Input
               {...register("name", { required: "El nombre es obligatorio" })}
               placeholder="Nombre del personaje"
@@ -189,7 +199,9 @@ export default function CharacterCreationForm({
           </div>
 
           <div>
-            Clase:
+            <label className="block text-sm font-medium text-white">
+              Clase:
+            </label>
             <Controller
               name="class"
               control={control}
@@ -199,12 +211,16 @@ export default function CharacterCreationForm({
                   defaultValue={watch("class")}
                   onValueChange={field.onChange}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-[#1f2937] text-white border-white min-w-[220px] w-fit cursor-pointer hover:bg-[#323b47]">
                     <SelectValue placeholder="Selecciona una clase" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="z-50 bg-[#1f2937] text-white border border-white">
                     {classOptions.map((c) => (
-                      <SelectItem key={c} value={c}>
+                      <SelectItem
+                        key={c}
+                        value={c}
+                        className="hover:bg-[#2f3640] hover:text-white cursor-pointer transition-colors"
+                      >
                         {c}
                       </SelectItem>
                     ))}
@@ -228,12 +244,16 @@ export default function CharacterCreationForm({
                   defaultValue={watch("race")}
                   onValueChange={field.onChange}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-[#1f2937] text-white border-white min-w-[220px] w-fit cursor-pointer hover:bg-[#323b47]">
                     <SelectValue placeholder="Selecciona una raza" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="z-50 bg-[#1f2937] text-white border border-white">
                     {raceOptions.map((r) => (
-                      <SelectItem key={r} value={r}>
+                      <SelectItem
+                        key={r}
+                        value={r}
+                        className="hover:bg-[#2f3640] hover:text-white cursor-pointer transition-colors"
+                      >
                         {r}
                       </SelectItem>
                     ))}
@@ -257,12 +277,16 @@ export default function CharacterCreationForm({
                   defaultValue={watch("background")}
                   onValueChange={field.onChange}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-[#1f2937] text-white border-white min-w-[220px] w-fit cursor-pointer hover:bg-[#323b47]">
                     <SelectValue placeholder="Selecciona un trasfondo" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="z-50 bg-[#1f2937] text-white border border-white">
                     {backgroundOptions.map((b) => (
-                      <SelectItem key={b} value={b}>
+                      <SelectItem
+                        key={b}
+                        value={b}
+                        className="hover:bg-[#2f3640] hover:text-white cursor-pointer transition-colors"
+                      >
                         {b}
                       </SelectItem>
                     ))}
@@ -289,15 +313,25 @@ export default function CharacterCreationForm({
                 <div className="grid grid-cols-2 gap-2">
                   {spellData[
                     selectedClass as keyof typeof spellData
-                  ].cantrips.map((spell) => (
-                    <label key={spell} className="flex items-center space-x-2">
-                      <Checkbox
-                        checked={selectedCantrips.includes(spell)}
-                        onCheckedChange={() => handleCantripSelection(spell)}
-                      />
-                      <span>{spell}</span>
-                    </label>
-                  ))}
+                  ].cantrips.map((spell) => {
+                    const isSelected = selectedCantrips.includes(spell);
+                    return (
+                      <label
+                        key={spell}
+                        className={`flex items-center space-x-2 px-3 py-2 rounded-md border transition-colors duration-200 cursor-pointer ${
+                          isSelected
+                            ? "bg-purple-700/40 border-purple-500 text-white"
+                            : "bg-[#1f2937]/40 border-gray-500 text-gray-200 hover:bg-[#2c3443]"
+                        }`}
+                      >
+                        <Checkbox
+                          checked={isSelected}
+                          onCheckedChange={() => handleCantripSelection(spell)}
+                        />
+                        <span>{spell}</span>
+                      </label>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -310,15 +344,25 @@ export default function CharacterCreationForm({
                 <div className="grid grid-cols-2 gap-2">
                   {spellData[
                     selectedClass as keyof typeof spellData
-                  ].firstLevelSpells.map((spell) => (
-                    <label key={spell} className="flex items-center space-x-2">
-                      <Checkbox
-                        checked={selectedSpells.includes(spell)}
-                        onCheckedChange={() => handleSpellSelection(spell)}
-                      />
-                      <span>{spell}</span>
-                    </label>
-                  ))}
+                  ].firstLevelSpells.map((spell) => {
+                    const isSelected = selectedSpells.includes(spell);
+                    return (
+                      <label
+                        key={spell}
+                        className={`flex items-center space-x-2 px-3 py-2 rounded-md border transition-colors duration-200 cursor-pointer ${
+                          isSelected
+                            ? "bg-indigo-700/40 border-indigo-500 text-white"
+                            : "bg-[#1f2937]/40 border-gray-500 text-gray-200 hover:bg-[#2c3443]"
+                        }`}
+                      >
+                        <Checkbox
+                          checked={isSelected}
+                          onCheckedChange={() => handleSpellSelection(spell)}
+                        />
+                        <span>{spell}</span>
+                      </label>
+                    );
+                  })}
                 </div>
               </div>
             </>
@@ -333,7 +377,12 @@ export default function CharacterCreationForm({
             />
           )}
 
-          <Button type="submit">Siguiente</Button>
+          <Button
+            type="submit"
+            className="px-8 py-3 rounded-xl text-lg bg-[#3e3e6f] hover:bg-[#505092] text-white shadow-lg transition duration-300"
+          >
+            Siguiente
+          </Button>
         </form>
       </CardContent>
     </Card>

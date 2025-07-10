@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
-
 export default function CharacterReview({
   characterData,
   onBack,
@@ -115,11 +114,18 @@ export default function CharacterReview({
       </div>
 
       {/* Botones de acción */}
-      <div className="flex justify-between mt-6">
-        <Button variant="outline" onClick={onBack}>
+      <div className="flex justify-between gap-4 mt-6">
+        <Button
+          variant="outline"
+          onClick={onBack}
+          className="w-30 bg-[#5e2742] hover:bg-[#772e57] cursor-pointer"
+        >
           Atrás
         </Button>
-        <Button onClick={onConfirm} className="bg-green-500 hover:bg-green-600">
+        <Button
+          onClick={onConfirm}
+          className="w-30 bg-[#3e3e6f] hover:bg-[#505092] cursor-pointer"
+        >
           Confirmar
         </Button>
       </div>

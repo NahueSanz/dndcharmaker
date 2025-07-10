@@ -61,6 +61,7 @@ export default function StatsBlock({
                 variant="outline"
                 onClick={() => handleStatChange(stat, -1)}
                 disabled={value === 1}
+                className="hover:bg-red-500 cursor-pointer"
               >
                 -
               </Button>
@@ -73,6 +74,7 @@ export default function StatsBlock({
                 variant="outline"
                 onClick={() => handleStatChange(stat, 1)}
                 disabled={value === 30}
+                className="hover:bg-green-500 cursor-pointer"
               >
                 +
               </Button>
