@@ -6,10 +6,21 @@ import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const loginWithProvider = async (provider: "google") => {
-    const { error } = await supabase.auth.signInWithOAuth({ provider });
-    if (error) console.error("Error al iniciar sesión:", error.message);
-  };
+    const wasLoggedOut = localStorage.getItem("loggedOut") === "true";
 
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        queryParams: wasLoggedOut ? { prompt: "select_account" } : {},
+      },
+    });
+
+    if (error) {
+      console.error("Error al iniciar sesión:", error.message);
+    } else {
+      localStorage.removeItem("loggedOut"); // Limpieza
+    }
+  };
   return (
     <div className="flex flex-col items-center justify-start px-4 pt-10 gap-6">
       <img src={image.src} alt="Kit Esencial" className="w-52" />

@@ -30,12 +30,14 @@ export default function Header() {
   }, []);
 
   const handleLogout = async () => {
+    localStorage.setItem("loggedOut", "true");
     const { error } = await supabase.auth.signOut();
+
     if (error) {
       console.error("Error al cerrar sesión:", error.message);
       return;
     }
-    router.push("/login"); // o redirigí a "/" si no tenés login page
+    router.push("/login"); 
   };
 
   return (
