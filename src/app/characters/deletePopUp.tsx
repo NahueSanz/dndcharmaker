@@ -86,7 +86,7 @@ export default function DeleteCharacterButton({
       <DialogContent className="bg-gray-900 text-white">
         <DialogHeader>
           <DialogTitle className="text-red-500">
-            ¿Está seguro que desea eliminar el personaje '{characterName}'?
+            ¿Está seguro que desea eliminar el personaje &quot;{characterName}&quot;?
           </DialogTitle>
           <p className="text-gray-300 text-sm">
             Esta acción no puede deshacerse.

@@ -84,7 +84,7 @@ export default function CharacterDetailsForm({
   );
 
   const handleSkillSelection = (skill: string) => {
-    let updatedSkills = selectedSkills.includes(skill)
+    const updatedSkills = selectedSkills.includes(skill)
       ? selectedSkills.filter((s) => s !== skill)
       : [...selectedSkills, skill];
 

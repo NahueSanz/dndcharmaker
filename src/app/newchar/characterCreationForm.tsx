@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import Image from "next/image";
 
 const classOptions = ["Guerrero", "Mago", "Pícaro", "Clérigo", "Bardo"];
 const raceOptions = ["Humano", "Elfo", "Enano", "Gnomo"];
@@ -122,7 +123,6 @@ export default function CharacterCreationForm({
     watch,
     control,
     setValue,
-    getValues,
     formState: { errors },
   } = useForm({ defaultValues: initialData });
   const selectedClass = watch("class");
@@ -139,7 +139,7 @@ export default function CharacterCreationForm({
 
     const fileName = `${Date.now()}-${file.name}`;
 
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from("avatars")
       .upload(fileName, file);
 
@@ -162,7 +162,7 @@ export default function CharacterCreationForm({
 
     const maxCantrips = spellData[classKey].maxCantrips;
 
-    let updatedCantrips = selectedCantrips.includes(cantrip)
+    const updatedCantrips = selectedCantrips.includes(cantrip)
       ? selectedCantrips.filter((c) => c !== cantrip)
       : [...selectedCantrips, cantrip];
 
@@ -179,7 +179,7 @@ export default function CharacterCreationForm({
 
     const maxSpells = spellData[classKey].maxSpells;
 
-    let updatedSpells = selectedSpells.includes(spell)
+    const updatedSpells = selectedSpells.includes(spell)
       ? selectedSpells.filter((s) => s !== spell)
       : [...selectedSpells, spell];
 
@@ -195,7 +195,7 @@ export default function CharacterCreationForm({
     setSelectedSpells([]);
     setValue("cantrips", []);
     setValue("spells", []);
-  }, [selectedClass]);
+  }, [selectedClass, setValue]);
 
   return (
     <Card className="max-w-lg mx-auto p-4 bg-[#1f2937]/80 rounded-2xl shadow-xl backdrop-blur border border-gray-700 text-white">
@@ -397,12 +397,15 @@ export default function CharacterCreationForm({
             className="cursor-pointer"
           />
           {image && (
-            <img
+            <Image
               src={image}
               alt="Vista previa"
-              className="w-32 h-32 object-cover"
+              width={128}
+              height={128}
+              className="rounded-md object-cover"
             />
           )}
+
           <div className="flex justify-end">
             <Button
               type="submit"

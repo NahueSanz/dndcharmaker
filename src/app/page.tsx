@@ -8,16 +8,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function HomePage() {
-  const [user, setUser] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
-    const getUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      if (data?.user) setUser(data.user);
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) {
+        router.replace("/login");
+      }
     };
-    getUser();
-  }, []);
+    checkSession();
+  }, [router]);
 
   useEffect(() => {
     const checkSession = async () => {

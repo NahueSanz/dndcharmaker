@@ -25,7 +25,6 @@ type Character = {
 };
 
 export default function ViewCharacters() {
-  const [user, setUser] = useState<any>(null);
 
   const [characters, setCharacters] = useState<Character[]>([]);
   const fetchCharacter = async () => {

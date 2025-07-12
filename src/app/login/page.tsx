@@ -3,6 +3,7 @@
 import { supabase } from "../lib/supabase";
 import image from "../../../assets/dungeonsKit.webp";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export default function LoginPage() {
   const loginWithProvider = async (provider: "google") => {
@@ -23,7 +24,7 @@ export default function LoginPage() {
   };
   return (
     <div className="flex flex-col items-center justify-start px-4 pt-10 gap-6">
-      <img src={image.src} alt="Kit Esencial" className="w-52" />
+      <Image src={image.src} alt="Kit Esencial" className="w-52" width={300} height={200}/>
       <div className="max-w-3xl bg-[#1f2937]/70 p-6 rounded-xl shadow-lg backdrop-blur text-sm leading-relaxed text-gray-200">
         <h2 className="text-xl font-bold text-white mb-4 text-center">
           ¿Por qué hice este proyecto?
