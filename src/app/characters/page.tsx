@@ -1,10 +1,11 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { supabase } from "../lib/supabase";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import DeleteCharacterButton from "./deletePopUp";
+import Link from "next/link";
 
 type Character = {
   id: number;
@@ -23,7 +24,7 @@ type Character = {
   image: string;
 };
 
-export default function viewCharacters() {
+export default function ViewCharacters() {
   const [user, setUser] = useState<any>(null);
 
   const [characters, setCharacters] = useState<Character[]>([]);
@@ -54,7 +55,10 @@ export default function viewCharacters() {
     <div className="max-w-4xl mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4">Mis Personajes</h2>
       {characters.length === 0 ? (
-        <p>No tienes personajes creados aún.</p>
+        <p>
+          No tienes personajes creados aún. Puedes crear uno dando click{" "}
+          <Link href="/newchar" className="text-blue-600 hover:text-blue-400">aquí</Link>.
+        </p>
       ) : (
         characters.map((character) => (
           <div key={character.id} className="mb-6 p-4 bg-gray-800 rounded-lg">

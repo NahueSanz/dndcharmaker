@@ -15,7 +15,6 @@ import { usePathname } from "next/navigation";
 
 export default function Header() {
   const pathname = usePathname();
-  if (pathname === "/login") return null;
   const [userName, setUserName] = useState<string | null>(null);
   const router = useRouter();
 
@@ -37,8 +36,10 @@ export default function Header() {
       console.error("Error al cerrar sesión:", error.message);
       return;
     }
-    router.push("/login"); 
+    router.push("/login");
   };
+  
+  if (pathname === "/login") return null;
 
   return (
     <header className="z-50 flex justify-between items-center px-6 py-4 bg-[#1a1a2e] shadow-md">
